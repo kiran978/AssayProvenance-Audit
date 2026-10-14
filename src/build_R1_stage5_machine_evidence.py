@@ -24,7 +24,7 @@ def xrefs(d):
     return set(int(x["xref"]["aid"]) for x in d.get("xref",[])
                if isinstance(x.get("xref"),dict) and str(x["xref"].get("aid","")).isdigit())
 def mentions(d,aid):
-    pattern=r"(?<!\\d)"+str(aid)+r"(?!\\d)"
+    pattern=r"(?<!\d)"+str(aid)+r"(?!\d)"
     return [f"{k}[{i}]" for k in ("description","protocol","comment")
             for i,line in enumerate(d.get(k,[])) if re.search(pattern,str(line))]
 data={}; metadata=[]
