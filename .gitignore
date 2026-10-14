@@ -1,0 +1,5 @@
+raw_pubchem/*.description.json
+raw_pubchem/retrieval_log.csv
+__pycache__/
+*.pyc
+.DS_Store
