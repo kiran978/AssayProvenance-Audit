@@ -1,0 +1,42 @@
+name: R1 Stage 5B all43 source adjudication preparation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'r1_stage5b/**'
+      - '.github/workflows/pubchem-r1-stage5b.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  preliminary-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout frozen stage 4 registry and 43 case annotations
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download 71 verified PubChem source descriptions
+        uses: actions/download-artifact@v4
+        with:
+          name: R1-PubChem-primary-source-retrieval
+          run-id: 38526148731
+          repository: kiran978/AssayProvenance-Audit
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: raw_pubchem
+      - name: Validate evidence source links and reproducibly assemble 43 pair review
+        run: python r1_stage5b/build_documentary_adjudication.py
+      - name: Save full preliminary evidence and blank human review file
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: R1-Stage5B-43pair-Preliminary-Review
+          path: r1_stage5b/generated/
+          if-no-files-found: error
+          retention-days: 30
