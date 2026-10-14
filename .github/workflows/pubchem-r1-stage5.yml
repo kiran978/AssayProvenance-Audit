@@ -1,0 +1,44 @@
+name: R1 Stage 5 documentary evidence extraction
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/build_R1_stage5_machine_evidence.py'
+      - '.github/workflows/pubchem-r1-stage5.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download original 71 AID JSON artifact from successful R1 run
+        uses: actions/download-artifact@v4
+        with:
+          name: R1-PubChem-primary-source-retrieval
+          run-id: 38526148731
+          repository: kiran978/AssayProvenance-Audit
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: raw_pubchem
+      - name: Recheck original 43-pair registry
+        run: python src/validate_R1_evidence.py
+      - name: Extract documentary facts without independent-provenance decisions
+        run: python src/build_R1_stage5_machine_evidence.py
+      - name: Save source-linked expert-review preparation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: R1-Stage5-Documentary-Evidence-Review
+          path: stage5_out/
+          if-no-files-found: warn
+          retention-days: 30
