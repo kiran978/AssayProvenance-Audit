@@ -72,7 +72,7 @@ Exact archived JSON field locations (zero-indexed):
 - AID **602168** `protocol[2]`: SRC3 top 250 from primary AID 588352, SRC3 confirmation AID 588792 and VP16 counterscreen AID 588794 are evaluated for off-target SRC1 inhibitory effects.
 - AID **602235** `protocol[2]`: SRC1-confirmed compounds from AID 588820, filtered against SRC1 VP16 counterscreen AID 588824, progress to SRC1 dose-response evaluation.
 - Both `protocol[4]` (identical text): HEK293 GAL4 reporter / pBIND-SRC1 luciferase assay, quadruplicate, 10-point 1:3 dilution starting at 36 uM nominal concentration.
-- Both `protocol[10]`: 1536-well reporter cell assay, ONE-Glo luciferase and ViewLux fluorescence/luminescence instrumentation; full methods substantially matched, but not every letter is identical.
+- Both `protocol[10]`: 1536-well reporter cell assay, ONE-Glo luciferase and ViewLux luminescence readout; full methods substantially matched, but not every letter is identical.
 - Both `protocol[20-24]`: 4-parameter sigmoidal curve fitting (the relevant subsection appears in `protocol[22]` for 602168, `protocol[20]` for 602235); these are method descriptions, *not* raw IC50-data lineage.
 - Of 43 paired protocol text entries, **34 are exactly identical**, reflecting a shared written protocol template. This does **not** prove identical measurements.
 - Both `comment[0]` mention that the assays *may* have been run in separate screening campaigns and normalized on a per-plate basis. This possibility is not evidence of actual execution or cross-AID data reuse.
