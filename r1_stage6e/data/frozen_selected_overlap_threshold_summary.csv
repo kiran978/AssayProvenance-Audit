@@ -1,0 +1,8 @@
+threshold_ge,selected_pairs_retained,unique_targets_retained,review_shared_program,review_program_unresolved,frozen_compatible,frozen_sensitivity_only,frozen_incompatible,full_discovery_rerun
+10,43,29,41,2,23,10,10,NO_LEFT_TRUNCATED_AT_20
+20,43,29,41,2,23,10,10,NO_RE_FILTER_FROZEN
+30,30,24,29,1,15,6,9,NO_RE_FILTER_FROZEN
+40,22,19,21,1,10,4,8,NO_RE_FILTER_FROZEN
+50,17,14,16,1,8,3,6,NO_RE_FILTER_FROZEN
+100,10,8,10,0,4,3,3,NO_RE_FILTER_FROZEN
+200,8,6,8,0,2,3,3,NO_RE_FILTER_FROZEN
