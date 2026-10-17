@@ -1,0 +1,42 @@
+name: R1 Stage 6B empirical PubChem assay result audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'r1_stage6b/pilot_pubchem_result_audit.py'
+      - '.github/workflows/r1-stage6b-empirical-audit.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: r1-stage6b-empirical
+  cancel-in-progress: false
+jobs:
+  result-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Retrieve PubChem original results and audit six representative pairs
+        run: python -u r1_stage6b/pilot_pubchem_result_audit.py
+      - name: Always archive original PubChem CSV, digest manifest and pair summaries
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: R1-Stage6B-Original-PubChem-Result-Pilot
+          path: r1_stage6b/generated/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit only aggregate audit and retrieval manifest (not source CSV tables)
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add r1_stage6b/generated/retrieval_manifest.csv r1_stage6b/generated/pair_result_audit.csv r1_stage6b/generated/run_summary.json r1_stage6b/generated/results.README.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Stage 6B original PubChem activity results and provenance limits"
+            git push
+          fi
