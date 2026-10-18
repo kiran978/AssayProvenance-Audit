@@ -38,6 +38,17 @@ The check uses only Python standard libraries. See [reproducibility instructions
 - No verified positive/negative original experimental reuse controls; no accuracy, AUROC, sensitivity, specificity, cross-database prevalence, clinical diagnostic inference, or proven model leakage is claimed.
 - The 43-pair PubChem sample was intentionally selected; the original ChEMBL/BindingDB eligibility sets have different units and selection processes and must not be pooled.
 
+## Reproducible analytical figures
+
+Eight evidence-derived analytical figures (each in **PNG and editable SVG**) are versioned under [figures/reproducible](figures/reproducible/). They are generated deterministically from the deposited tabular data by [scripts/regenerate_evidence_figures.py](scripts/regenerate_evidence_figures.py); see [figure dependencies](requirements-figures.txt) and the passing [figure-build workflow](.github/workflows/build-reproducible-figures.yml).
+
+```bash
+python -m pip install -r requirements-figures.txt
+python scripts/regenerate_evidence_figures.py
+```
+
+**These are reproduced analytical plot versions, not a claim that the embedded figures in an earlier Word manuscript use identical rendering or typography.** Check the journal manuscript's individual figure numbers and captions against this generated set before substitution. Figure 8 illustrates **counterfactual eligibility**, not experimentally verified independent datasets.
+
 ## Provenance, reusability, and publication
 
 The [original project stages](r1_stage5e/README.md) remain for reproducibility and historically frozen labels are preserved; the newer `data/chembl` and `data/pubchem` tables are versioned derived outputs, **not silently substituted for the original records**. We provide algorithmic verification with [GitHub Actions](.github/workflows/verify-and-deposit-evidence.yml) and the script above.
