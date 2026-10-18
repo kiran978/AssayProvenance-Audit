@@ -1,0 +1,69 @@
+name: Verify evidence and deposit archived PubChem result CSVs
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/verify_public_evidence.py'
+      - '.github/workflows/verify-and-deposit-evidence.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: assayprovenance-dataset-deposit
+  cancel-in-progress: false
+jobs:
+  deposit-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify all committed case-level research tables
+        run: python scripts/verify_public_evidence.py
+      - name: Recover archived PubChem result CSVs from original Stage 6B workflow run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 38987545673 \
+            --repo "${{ github.repository }}" \
+            --name R1-Stage6B-Original-PubChem-Result-Pilot \
+            --dir stage6b_immutable_artifact
+          find stage6b_immutable_artifact -maxdepth 3 -type f | sort
+      - name: Validate archived source SHA-256 digests
+        run: |
+          python - <<'PY'
+          import csv,hashlib
+          from pathlib import Path
+          manifest=Path("r1_stage6b/generated/retrieval_manifest.csv")
+          raw=Path("stage6b_immutable_artifact/raw")
+          if not raw.is_dir():raise SystemExit("BLOCKED: source result tables absent")
+          rows=list(csv.DictReader(manifest.open(newline="",encoding="utf-8-sig")))
+          if len(rows)!=24:raise SystemExit("BLOCKED: expected 24 source CSV records")
+          for d in rows:
+              if d["status"]!="OK" or not d["sha256"]:raise SystemExit("BLOCKED: invalid retrieval manifest")
+              p=raw/("AID_"+d["aid"]+"."+d["mode"]+".csv")
+              if not p.is_file():raise SystemExit("BLOCKED: missing "+str(p))
+              h=hashlib.sha256(p.read_bytes()).hexdigest()
+              if h!=d["sha256"]:raise SystemExit("BLOCKED: SHA-256 mismatch "+str(p))
+              print("PASS",p.name,h)
+          if len(list(raw.glob("*.csv")))!=24:raise SystemExit("BLOCKED: unexpected CSV count")
+          dest=Path("data/pubchem/original_result_tables_2026-10-17")
+          dest.mkdir(parents=True,exist_ok=True)
+          for p in raw.glob("*.csv"): (dest/p.name).write_bytes(p.read_bytes())
+          print("READY: 24 original checksum-matched PubChem source CSVs")
+          PY
+      - name: Commit verified original source CSV snapshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/pubchem/original_result_tables_2026-10-17/
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive 24 hash-matched original PubChem source CSVs"
+            git push
+          else
+            echo "Snapshots already verified and committed"
+          fi
