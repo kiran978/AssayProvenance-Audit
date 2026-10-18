@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Please cite the associated research article, once published, and this research evidence repository. This dataset has no verified DOI yet."
+title: "Provenance-aware audit of public bioactivity assay overlap: derived evidence and analysis code"
+type: dataset
+authors:
+  - family-names: Gaikwad
+    given-names: Kiran N.
+repository-code: "https://github.com/kiran978/AssayProvenance-Audit"
+url: "https://github.com/kiran978/AssayProvenance-Audit"
+version: "0.1.0-prepublication"
+keywords:
+  - chemical bioactivity data
+  - ChEMBL
+  - BindingDB
+  - PubChem BioAssay
+  - experimental provenance
+  - assay independence
