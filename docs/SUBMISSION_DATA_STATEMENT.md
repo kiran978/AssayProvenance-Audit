@@ -1,0 +1,9 @@
+# Data and code availability — editorial draft only
+
+**Do not use as a public-access statement while the GitHub repository is private.**
+
+> **After author-approved public release and access verification:** Derived case-level ChEMBL 37 and PubChem BioAssay data, provenance review status tables, assay-result comparisons, original source-file integrity manifests, and reproducible Python scripts supporting this research are available from the versioned GitHub repository at https://github.com/kiran978/AssayProvenance-Audit (access date and release commit SHA to be inserted following publication of the repository). The original ChEMBL37 SQLite source database and the BindingDB 202609 46-candidate adjudication ledger were not deposited; consequently, raw-database ingestion and BindingDB case-level adjudications cannot be reproduced from the archive. Original PubChem result CSV exports are dated 2026-10-17 and identified by source-AID-specific SHA-256 digests. Human-review first-person corrections and original run-level measurement lineage remain pending; the archive should not be interpreted as evidence of proven experiment duplication.
+
+**Until the repository is actually public:** use a truthful restricted-availability statement instead, if permitted by the target journal, noting that derived data and code are being prepared for publication. Do not claim a verified Zenodo DOI; no Zenodo upload is part of this task.
+
+**Important editorial scope note:** *Clinica Chimica Acta* focuses on **clinical chemistry and diagnostic laboratory medicine**. The current manuscript is a general drug-discovery bioactivity-provenance audit and has **not** demonstrated a clinical diagnostic-laboratory application. The author should assess scope alignment before journal submission; data deposition cannot itself establish clinical relevance.
